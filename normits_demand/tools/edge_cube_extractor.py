@@ -154,9 +154,7 @@ def export_mat_2_csv_via_omx(
     with omx_file.OMXFile(pathlib.Path(out_path, f"{out_csv}.omx")) as omx_mat:
         for mx_lvl in omx_mat.matrix_levels:
             # move matrix level to a dataframe
-            mat = omx_2_df(
-                omx_mat.get_matrix_level(mx_lvl)
-            )
+            mat = omx_2_df(omx_mat.get_matrix_level(mx_lvl))
             # export matrix to csv
             file_ops.write_df(mat, f"{out_path}/{out_csv}_{mx_lvl}.csv", index=False)
 
@@ -165,11 +163,14 @@ def export_mat_2_csv_via_omx(
     # delete .MAT files
     os.remove(f"{out_path}/PT_{segment}.MAT")
 
+
 def pt_demand_from_to(
     exe_cube: pathlib.Path,
     cat_folder: pathlib.Path,
     run_folder: pathlib.Path,
     output_folder: pathlib.Path,
+    dimensions_version: int,
+    demand_version: int,
 ) -> None:
     """Create PA From/To Home matrices.
 
@@ -185,22 +186,32 @@ def pt_demand_from_to(
         full path top the folder where outputs to be saved.
     """
     # create file paths
-    area_sectors = cat_folder / "Params/Demand/Sector_Areas_Zones.MAT"
-    pt_24hr_demand = run_folder / "Inputs/Demand/PT_24hr_Demand.MAT"
+    area_sectors = (
+        cat_folder / f"ModelInputs/Dimensions/v{dimensions_version}/Sector_Areas_Zones.MAT"
+    )
+    pt_24hr_demand = run_folder / f"Inputs/Demand/v{demand_version}/PT_24hr_Demand.MAT"
 
-    splittingfactors_ds1 = run_folder / "Inputs/Demand/SplitFactors_DS1.MAT"
-    splittingfactors_ds2 = run_folder / "Inputs/Demand/SplitFactors_DS2.MAT"
-    splittingfactors_ds3 = run_folder / "Inputs/Demand/SplitFactors_DS3.MAT"
+    splittingfactors_ds1 = run_folder / f"Inputs/Demand/v{demand_version}/SplitFactors_DS1.MAT"
+    splittingfactors_ds2 = run_folder / f"Inputs/Demand/v{demand_version}/SplitFactors_DS2.MAT"
+    splittingfactors_ds3 = run_folder / f"Inputs/Demand/v{demand_version}/SplitFactors_DS3.MAT"
 
-    time_of_day_am = run_folder / "Inputs/Demand/Time_of_Day_Factors_Zonal_AM.MAT"
-    time_of_day_ip = run_folder / "Inputs/Demand/Time_of_Day_Factors_Zonal_IP.MAT"
-    time_of_day_pm = run_folder / "Inputs/Demand/Time_of_Day_Factors_Zonal_PM.MAT"
-    time_of_day_op = run_folder / "Inputs/Demand/Time_of_Day_Factors_Zonal_OP.MAT"
+    time_of_day_am = (
+        run_folder / f"Inputs/Demand/v{demand_version}/Time_of_Day_Factors_Zonal_AM.MAT"
+    )
+    time_of_day_ip = (
+        run_folder / f"Inputs/Demand/v{demand_version}/Time_of_Day_Factors_Zonal_IP.MAT"
+    )
+    time_of_day_pm = (
+        run_folder / f"Inputs/Demand/v{demand_version}/Time_of_Day_Factors_Zonal_PM.MAT"
+    )
+    time_of_day_op = (
+        run_folder / f"Inputs/Demand/v{demand_version}/Time_of_Day_Factors_Zonal_OP.MAT"
+    )
 
-    nhb_props_am = run_folder / "Inputs/Demand/OD_Prop_AM_PT.MAT"
-    nhb_props_ip = run_folder / "Inputs/Demand/OD_Prop_IP_PT.MAT"
-    nhb_props_pm = run_folder / "Inputs/Demand/OD_Prop_PM_PT.MAT"
-    nhb_props_op = run_folder / "Inputs/Demand/OD_Prop_OP_PT.MAT"
+    nhb_props_am = run_folder / f"Inputs/Demand/v{demand_version}/OD_Prop_AM_PT.MAT"
+    nhb_props_ip = run_folder / f"Inputs/Demand/v{demand_version}/OD_Prop_IP_PT.MAT"
+    nhb_props_pm = run_folder / f"Inputs/Demand/v{demand_version}/OD_Prop_PM_PT.MAT"
+    nhb_props_op = run_folder / f"Inputs/Demand/v{demand_version}/OD_Prop_OP_PT.MAT"
 
     # list of all files
     file_list = [

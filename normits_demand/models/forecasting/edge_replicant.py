@@ -1165,9 +1165,16 @@ def run_edge_growth(params: forecast_cnfg.EDGEParameters) -> None:
                 params.matrices_to_grow_dir / f"{period}_stn2stn_costs.csv"
             )
             # read iRSj props
-            irsj_props = pd.read_hdf(
-                params.matrices_to_grow_dir / f"{period}_iRSj_probabilities.h5", key="iRSj"
+            irsj_props = pd.read_parquet(
+                params.matrices_to_grow_dir / f"{period}_ixRSyj.PRQ"
             )
+            irsj_props = irsj_props.groupby([
+                "from_model_zone_id",
+                "from_stn_zone_id",
+                "to_stn_zone_id",
+                "to_model_zone_id",
+                "userclass"
+            ]).sum().reset_index()
             # period dictionary
             factored_matrices[period] = {}
             LOG.debug(

@@ -23,21 +23,24 @@ from normits_demand.utils import file_ops
 # ## USER INPUTS ## #
 # cube catalogue setup
 CUBE_EXE = Path("C:/Program Files/Citilabs/CubeVoyager/VOYAGER.EXE")
-CUBE_CAT_PATH = Path(r"C:\NorMITs\NorTMS_T3_Model_v8.16b")
-CAT_RUN_DIR = "Runs"
-CUBE_RUN_ID = "ILP_2018"
+CUBE_CAT_PATH = Path(r"C:\GitHub\NorTMS")
+CAT_RUN_DIR = "Scenarios/Base"
+CUBE_RUN_ID = "OFX_2018"
+NETWORK_VERSION = 63
+DIMENSIONS_VERSION = 3
+DEMAND_VERSION = 10
 
 # process parts
 # EXPORT_MATRICES to export NoRMS base matrices into CSVs
 # EXPORT_TLC to NoRMS <-> MOIRA TLCs Lookup
 EXPORT_MATRICES = True
-EXPORT_TLC = True
+EXPORT_TLC = False
 
 # Input files
-TLC_OVERWRITE_PATH = Path(r"C:\NorMITs\inputs\TLC_Overwrite_EDGE.csv")
+TLC_OVERWRITE_PATH = Path(r"U:\00_Inputs\GATInputs\TLC_Overwrite_MOIRA.csv")
 
 # Output location
-OUT_PATH = Path(r"C:\NorMITs\outputs")
+OUT_PATH = Path(r"C:\Work\NoRMS\NorMITs_Demand\Exports")
 
 # ## CONSTANTS ## #
 # logger
@@ -59,9 +62,10 @@ def run_extractor():
         file_ops.check_file_exists(TLC_OVERWRITE_PATH)
         tlc_overwrite = file_ops.read_df(TLC_OVERWRITE_PATH)
         stns_tlc = edge_cube_extractor.stnzone_2_stn_tlc(
-            CUBE_CAT_RUN_PATH / "Inputs/Network/Station_Connectors.csv",
-            CUBE_CAT_RUN_PATH / "Inputs/Network/TfN_Rail_Nodes.csv",
-            CUBE_CAT_RUN_PATH / "Inputs/Network/External_Station_Nodes.csv",
+            CUBE_CAT_RUN_PATH / f"Inputs/Network/v{NETWORK_VERSION}/Station_Connectors.csv",
+            CUBE_CAT_RUN_PATH / f"Inputs/Network/v{NETWORK_VERSION}/TfN_Rail_Nodes.csv",
+            CUBE_CAT_RUN_PATH
+            / f"Inputs/Network/v{NETWORK_VERSION}/External_Station_Nodes.csv",
             tlc_overwrite,
         )
 
@@ -77,28 +81,33 @@ def run_extractor():
         # copy Cube files
         for period in periods:
             # read distance matrix
-            file_ops.check_file_exists(
-                CUBE_CAT_RUN_PATH / f"Outputs/BaseAssign/{period}_stn2stn_costs.csv"
-            )
-            shutil.copy2(
-                CUBE_CAT_RUN_PATH / f"Outputs/BaseAssign/{period}_stn2stn_costs.csv",
-                OUT_PATH / f"{period}_stn2stn_costs.csv",
-            )
+            # file_ops.check_file_exists(
+            #     CUBE_CAT_RUN_PATH / f"Outputs/BaseAssign/{period}_stn2stn_costs.csv"
+            # )
+            # shutil.copy2(
+            #     CUBE_CAT_RUN_PATH / f"Outputs/BaseAssign/{period}_stn2stn_costs.csv",
+            #     OUT_PATH / f"{period}_stn2stn_costs.csv",
+            # )
 
-            # read iRSj props
-            file_ops.check_file_exists(
-                CUBE_CAT_RUN_PATH / f"Outputs/BaseAssign/{period}_iRSj_probabilities.h5"
-            )
-            shutil.copy2(
-                CUBE_CAT_RUN_PATH / f"Outputs/BaseAssign/{period}_iRSj_probabilities.h5",
-                OUT_PATH / f"{period}_iRSj_probabilities.h5",
-            )
+            # # read iRSj props
+            # file_ops.check_file_exists(
+            #     CUBE_CAT_RUN_PATH / f"Outputs/BaseAssign/{period}_iRSj_probabilities.h5"
+            # )
+            # shutil.copy2(
+            #     CUBE_CAT_RUN_PATH / f"Outputs/BaseAssign/{period}_iRSj_probabilities.h5",
+            #     OUT_PATH / f"{period}_iRSj_probabilities.h5",
+            # )
 
             LOG.info("Distance and Probability matrices for period %s has been copied", period)
 
         # PT Demand to time periods F/T
         edge_cube_extractor.pt_demand_from_to(
-            CUBE_EXE, CUBE_CAT_PATH, CUBE_CAT_RUN_PATH, OUT_PATH
+            CUBE_EXE,
+            CUBE_CAT_PATH,
+            CUBE_CAT_RUN_PATH,
+            OUT_PATH,
+            DIMENSIONS_VERSION,
+            DEMAND_VERSION,
         )
         LOG.info("NoRMS matrices converted to OMX successfully")
 
