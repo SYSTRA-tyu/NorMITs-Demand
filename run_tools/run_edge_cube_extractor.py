@@ -25,10 +25,10 @@ from normits_demand.utils import file_ops
 CUBE_EXE = Path("C:/Program Files/Citilabs/CubeVoyager/VOYAGER.EXE")
 CUBE_CAT_PATH = Path(r"C:\GitHub\NorTMS")
 CAT_RUN_DIR = "Scenarios/Base"
-CUBE_RUN_ID = "OFX_2018"
-NETWORK_VERSION = 63
-DIMENSIONS_VERSION = 3
-DEMAND_VERSION = 10
+CUBE_RUN_ID = "OIQ_2018"
+NETWORK_VERSION = 72
+DIMENSIONS_VERSION = 4
+DEMAND_VERSION = 45
 
 # process parts
 # EXPORT_MATRICES to export NoRMS base matrices into CSVs
@@ -40,7 +40,7 @@ EXPORT_TLC = False
 TLC_OVERWRITE_PATH = Path(r"U:\00_Inputs\GATInputs\TLC_Overwrite_MOIRA.csv")
 
 # Output location
-OUT_PATH = Path(r"C:\Work\NoRMS\NorMITs_Demand\Exports")
+OUT_PATH = Path(r"C:\Work\NoRMS\NorMITs_Demand\Out")
 
 # ## CONSTANTS ## #
 # logger
