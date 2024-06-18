@@ -25,10 +25,10 @@ from normits_demand.utils import file_ops
 CUBE_EXE = Path("C:/Program Files/Citilabs/CubeVoyager/VOYAGER.EXE")
 CUBE_CAT_PATH = Path(r"C:\GitHub\NorTMS")
 CAT_RUN_DIR = "Scenarios/Base"
-CUBE_RUN_ID = "OIQ_2018"
-NETWORK_VERSION = 72
+CUBE_RUN_ID = "OJG_2018"
+NETWORK_VERSION = 74
 DIMENSIONS_VERSION = 4
-DEMAND_VERSION = 45
+DEMAND_VERSION = 61
 
 # process parts
 # EXPORT_MATRICES to export NoRMS base matrices into CSVs
